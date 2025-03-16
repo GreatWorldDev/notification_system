@@ -1,0 +1,34 @@
+class PushNotificationSender < NotificationSender
+  def send_notification(notification)
+    # Send a push notification to the user
+    return false unless user.user_preference.push_notifications || user.devices.empty?
+
+    # get device tokens from user's devices
+    device_tokens = user.devices.pluck(:device_token)
+
+    fcm = FCM.new(ENV["FCM_SERVER_KEY"])
+
+    payload = {
+      notification: {
+        title: NotificationHelper.notification_title(
+          notification.notification_type
+        ),
+        body: notification.content
+      },
+      data: {
+        notification_id: notification.id,
+        notification_type: notification.notification_type
+      }
+    }
+
+    # Send to all devices
+    response = fcm.send(device_tokens, payload)
+
+    success = JSON.parse(response[:body])["success"]
+
+    success
+  rescue => e
+    Rails.logger.error("Failed to send push notification: #{e.message}")
+    false
+  end
+end
