@@ -7,4 +7,16 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  
+  # Notification routes
+  resources :notifications, only: [:index :show :create] do
+    member do
+      get :status # GET /api/notifications/:id/status
+    end
+  end
+
+  # User preferences routes
+  resources :users, only: [] do
+    resource :preferences, controller: "user_preferences", only: [:show :update]
+  end
 end

@@ -65,3 +65,7 @@ group :development, :test do
   gem "webmock", "~> 3.25"
   gem "dotenv-rails", "~> 3.1"
 end
+
+gem "kaminari", "~> 1.2"
+
+gem "redis", "~> 5.4"
