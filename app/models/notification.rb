@@ -1,20 +1,20 @@
 class Notification < ApplicationRecord
   belongs_to :user
 
-  enum notification_type: {
+  enum :notification_type, {
     alert: 0,
     reminder: 1,
     promotional: 2,
     system: 3
   }
 
-  enum channel: {
+  enum :channel, {
     email: 0,
     sms: 1,
     push: 2
   }
 
-  enum status: {
+  enum :status, {
     pending: 0,
     sent: 1,
     failed: 2

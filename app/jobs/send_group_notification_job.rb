@@ -1,4 +1,4 @@
-class SendGroupNotificationJob < ApplicationJob
+class SendGroupNotificationJob
   include Sidekiq::Job
 
   sidekiq_options queue: "notifications", retry: 3

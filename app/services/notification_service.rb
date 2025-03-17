@@ -5,7 +5,7 @@ class NotificationService
     @user = user
     @notification_params = notification_params
     @errors = []
-    @preferences = user.user_preferences
+    @preferences = user.user_preference
   end
 
   def valid?
@@ -59,9 +59,9 @@ class NotificationService
   def validate_user_info
     case notification_params[:channel].to_sym
     when :email
-      @errors << "User has no email address" if user.email.blank
+      @errors << "User has no email address" if user.email.blank?
     when :sms
-      @errors << "User has no phone number" if user.phone_number.blank
+      @errors << "User has no phone number" if user.phone_number.blank?
     when :push
       @errors << "User has no devices" if user.devices.empty?
     end
