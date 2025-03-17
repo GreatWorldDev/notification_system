@@ -1,0 +1,366 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Notification System API",
+    "version": "v1",
+    "description": "A scalable notification system API that can send notifications to users via different channels (email, SMS, push)."
+  },
+  "paths": {
+    "/api/notifications": {
+      "get": {
+        "summary": "Lists notifications",
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Lists all notifications for a user with pagination",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "format": "uuid",
+            "required": true,
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number (defaults to 1)",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "description": "Items per page (defaults to 10)",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "notifications found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a notification",
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Creates a new notification for a user or group",
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": "group notification queued"
+          },
+          "404": {
+            "description": "group not found"
+          },
+          "422": {
+            "description": "missing required parameters"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "user_id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "notification_type": {
+                        "type": "string",
+                        "enum": [
+                          "alert",
+                          "reminder",
+                          "promotional",
+                          "system"
+                        ]
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "channel": {
+                        "type": "string",
+                        "enum": [
+                          "email",
+                          "sms",
+                          "push"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "user_id",
+                      "notification_type",
+                      "content",
+                      "channel"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "group_id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "notification_type": {
+                        "type": "string",
+                        "enum": [
+                          "alert",
+                          "reminder",
+                          "promotional",
+                          "system"
+                        ]
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "channel": {
+                        "type": "string",
+                        "enum": [
+                          "email",
+                          "sms",
+                          "push"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "group_id",
+                      "notification_type",
+                      "content",
+                      "channel"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "format": "uuid",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieves a notification",
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Retrieves a specific notification by ID",
+        "responses": {
+          "200": {
+            "description": "notification found"
+          },
+          "404": {
+            "description": "notification not found"
+          }
+        }
+      }
+    },
+    "/api/notifications/{id}/status": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "format": "uuid",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Gets notification status",
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Gets the current status of a notification",
+        "responses": {
+          "200": {
+            "description": "status retrieved"
+          },
+          "404": {
+            "description": "notification not found"
+          }
+        }
+      }
+    },
+    "/api/users/{user_id}/preferences": {
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "format": "uuid",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Gets user preferences",
+        "tags": [
+          "User Preferences"
+        ],
+        "description": "Retrieves the notification preferences for a user",
+        "responses": {
+          "200": {
+            "description": "preferences found"
+          },
+          "404": {
+            "description": "user not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Updates user preferences",
+        "tags": [
+          "User Preferences"
+        ],
+        "description": "Updates notification preferences for a user",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "preferences updated"
+          },
+          "422": {
+            "description": "invalid preferences"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email_notifications": {
+                    "type": "boolean"
+                  },
+                  "sms_notifications": {
+                    "type": "boolean"
+                  },
+                  "push_notifications": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://{defaultHost}",
+      "variables": {
+        "defaultHost": {
+          "default": "localhost:3000"
+        }
+      }
+    }
+  ],
+  "components": {
+    "schemas": {
+      "notification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "notification_type": {
+            "type": "string",
+            "enum": [
+              "alert",
+              "reminder",
+              "promotional",
+              "system"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "email",
+              "sms",
+              "push"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "sent",
+              "failed"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "user_preference": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email_notifications": {
+            "type": "boolean"
+          },
+          "sms_notifications": {
+            "type": "boolean"
+          },
+          "push_notifications": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}
