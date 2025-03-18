@@ -49,25 +49,21 @@ module Api
       }
     end
 
+    # send individual notification for a specific user
     def process_individual_notification
       user = User.find_by(id: params[:user_id])
       return render json: { error: "User not found" }, status: :not_found unless user
 
-      notification_service = NotificationService.new(user, notification_params)
-
-      if notification_service.valid?
-        SendNotificationJob.perform_async(user.id, notification_params.to_json)
-        render json: { message: "Notification queued for delivery" }, status: :accepted
-      else
-        render json: { errors: notification_service.errors.full_messages }, status: :unprocessable_entity
-      end
+      SendNotificationJob.perform_async(user.id, notification_params.to_h)
+      render json: { message: "Notification queued for delivery" }, status: :accepted
     end
 
+    # send notifications to users of a specific group
     def process_group_notification
       group = Group.find_by(id: params[:group_id])
       return render json: { error: "Group not found" }, status: :not_found unless group
 
-      SendGroupNotificationJob.perform_async(group.id, notification_params.to_json)
+      SendGroupNotificationJob.perform_async(group.id, notification_params.to_h)
       render json: { message: "Group notification queued for delivery" }, status: :accepted
     end
   end

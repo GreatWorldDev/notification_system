@@ -1,5 +1,7 @@
 class EmailNotificationSender < NotificationSender
   def send_notification(notification)
+    return false unless user.user_preference.email_notifications
+
     # Send an email to the user
     NotificationMailer.send_notification(
       user.email,

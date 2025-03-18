@@ -1,7 +1,7 @@
 class PushNotificationSender < NotificationSender
   def send_notification(notification)
     # Send a push notification to the user
-    return false unless user.user_preference.push_notifications || user.devices.empty?
+    return false unless user.user_preference.push_notifications || !user.devices.empty?
 
     # get device tokens from user's devices
     device_tokens = user.devices.pluck(:device_token)
