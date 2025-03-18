@@ -1,7 +1,7 @@
 class SendGroupNotificationJob
   include Sidekiq::Job
 
-  sidekiq_options queue: "notifications", retry: 3
+  sidekiq_options retry: 3
 
   def perform(group_id, notification_params)
     group = Group.find_by(id: group_id)

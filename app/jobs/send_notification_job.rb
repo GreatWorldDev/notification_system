@@ -1,7 +1,7 @@
 class SendNotificationJob
   include Sidekiq::Job
 
-  sidekiq_options queue: "notifications", retry: 3
+  sidekiq_options retry: 3
 
   def perform(user_id, notification_params)
     user = User.find(user_id)
@@ -10,7 +10,7 @@ class SendNotificationJob
     notification_service = NotificationService.new(user, notification_params.symbolize_keys)
 
     unless notification_service.valid?
-      Rails.logger.warn("Skipping notification for user #{user_id}: #{service.errors.join(', ')}")
+      Rails.logger.warn("Skipping notification for user #{user_id}: #{notification_service.errors.join(', ')}")
       return
     end
 

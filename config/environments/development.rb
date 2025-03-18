@@ -30,7 +30,20 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
+
+  config.action_mailer.delivery_method = :smtp
+
+  # SMTP settings for sending emails
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com", # Update if using another provider
+    port: 587,
+    domain: "gmail.com", # Change this to your verified domain
+    user_name: ENV["SMTP_USERNAME"], # Your Gmail/SMTP username
+    password: ENV["SMTP_PASSWORD"], # Use an App Password instead of Gmail password
+    authentication: "plain",
+    enable_starttls_auto: true
+  }
 
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false

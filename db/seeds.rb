@@ -8,7 +8,6 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# db/seeds.rb
 # Create test users
 users = [
   { email: 'brettold.it@gmail.com', phone_number: '+14155552671' },

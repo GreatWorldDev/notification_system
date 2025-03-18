@@ -60,12 +60,12 @@ group :development, :test do
   gem "vcr", "~> 6.3"
   gem "webmock", "~> 3.25"
   gem "dotenv-rails", "~> 3.1"
-  gem "rswag-api", "~> 2.16"
-  gem "rswag-ui", "~> 2.16"
 end
 
 gem "kaminari", "~> 1.2"
 
 gem "redis", "~> 5.4"
 
+gem "rswag-api", "~> 2.16"
+gem "rswag-ui", "~> 2.16"
 gem "rswag-specs", "~> 2.16"
