@@ -20,4 +20,20 @@ class SmsNotificationSender < NotificationSender
     Rails.logger.error("Failed to send SMS notification to #{user.phone_number}: #{e.message}")
     false
   end
+
+  def valid?
+    validate_channel_enabled
+    validate_user_info
+    true
+  end
+
+  private
+
+  def validate_channel_enabled
+    raise "SMS notifications disabled for this user" unless @preferences.sms_notifications
+  end
+
+  def validate_user_info
+    raise "User has no phone number" if user.phone_number.blank?
+  end
 end
