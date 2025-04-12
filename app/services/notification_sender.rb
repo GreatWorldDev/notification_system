@@ -6,6 +6,17 @@ class NotificationSender
   end
 
   def send_notification(notification)
-    raise NotImplementedError, "This method must be implemented in a subclass"
+    return false unless can_send?(notification)
+    do_send_notification(notification)
+  end
+
+  protected
+
+  def can_send?(notification)
+    raise NotImplementedError
+  end
+
+  def do_send_notification(notification)
+    raise NotImplementedError
   end
 end

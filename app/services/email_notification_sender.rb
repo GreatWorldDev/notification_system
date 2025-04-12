@@ -1,17 +1,19 @@
 class EmailNotificationSender < NotificationSender
-  def send_notification(notification)
-    return false unless user.user_preference.email_notifications
+  protected
 
-    # Send an email to the user
+  def can_send?(notification)
+    user.user_preference.email_notifications && user.email.present?
+  end
+
+  def do_send_notification(notification)
     NotificationMailer.send_notification(
       user.email,
       notification.content,
       notification.notification_type
     ).deliver_now
-
     true
   rescue => e
-    Rails.logger.error("Failed to send email notification to #{user.email}: #{e.message}")
+    Rails.logger.error("Failed to send email notification: #{e.message}")
     false
   end
 end
