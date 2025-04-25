@@ -1,6 +1,8 @@
 class EmailNotificationSender < NotificationSender
   def send_notification(notification)
-    return false unless user.user_preference.email_notifications
+    # Check if user has enabled email notifications
+    # and if user has a valid email address
+    return false unless valid?
 
     # Send an email to the user
     NotificationMailer.send_notification(

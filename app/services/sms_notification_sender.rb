@@ -1,7 +1,8 @@
 class SmsNotificationSender < NotificationSender
   def send_notification(notification)
-    # send SMS
-    return false unless user.user_preference.sms_notifications || user.phone_number.present
+    # check if user has enabled SMS notifications
+    # and if user has a valid phone number
+    return false unless valid?
 
     # use Twilio to send SMS
     client = Twilio::REST::Client.new(

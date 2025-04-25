@@ -44,6 +44,11 @@ gem "sidekiq", "~> 8.0"
 gem "twilio-ruby", "~> 7.5"
 gem "fcm", "~> 2.0"
 
+
+gem "kaminari", "~> 1.2"
+
+gem "redis", "~> 5.4"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -61,10 +66,6 @@ group :development, :test do
   gem "webmock", "~> 3.25"
   gem "dotenv-rails", "~> 3.1"
 end
-
-gem "kaminari", "~> 1.2"
-
-gem "redis", "~> 5.4"
 
 gem "rswag-api", "~> 2.16"
 gem "rswag-ui", "~> 2.16"
