@@ -5,14 +5,16 @@ class NotificationService
     @user = user
     @notification_params = notification_params
     @errors = []
-    @preferences = user.user_preference
   end
 
   def valid?
-    validate_channel_enabled
-    validate_user_info
-
-    @errors.empty?
+    begin
+      sender.valid?
+      true
+    rescue => e
+      @errors << e.message
+      false
+    end
   end
 
   def send_notification
@@ -22,8 +24,6 @@ class NotificationService
       channel: notification_params[:channel],
       status: :pending
     )
-
-    sender = notification_sender(notification_params[:channel])
 
     begin
       # send the notification through the selected channel
@@ -45,26 +45,8 @@ class NotificationService
 
   private
 
-  def validate_channel_enabled
-    case notification_params[:channel].to_sym
-    when :email
-      @errors << "Email notifications disabled for this user" unless @preferences.email_notifications
-    when :sms
-      @errors << "SMS notifications disabled for this user" unless @preferences.sms_notifications
-    when :push
-      @errors << "Push notifications disabled for this user" unless @preferences.push_notifications
-    end
-  end
-
-  def validate_user_info
-    case notification_params[:channel].to_sym
-    when :email
-      @errors << "User has no email address" if user.email.blank?
-    when :sms
-      @errors << "User has no phone number" if user.phone_number.blank?
-    when :push
-      @errors << "User has no devices" if user.devices.empty?
-    end
+  def sender
+    @sender ||= notification_sender(notification_params[:channel])
   end
 
   def notification_sender(channel)

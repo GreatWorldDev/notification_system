@@ -1,7 +1,8 @@
 class SmsNotificationSender < NotificationSender
   def send_notification(notification)
-    # send SMS
-    return false unless user.user_preference.sms_notifications || user.phone_number.present
+    # check if user has enabled SMS notifications
+    # and if user has a valid phone number
+    return false unless valid?
 
     # use Twilio to send SMS
     client = Twilio::REST::Client.new(
@@ -19,5 +20,21 @@ class SmsNotificationSender < NotificationSender
   rescue => e
     Rails.logger.error("Failed to send SMS notification to #{user.phone_number}: #{e.message}")
     false
+  end
+
+  def valid?
+    validate_channel_enabled
+    validate_user_info
+    true
+  end
+
+  private
+
+  def validate_channel_enabled
+    raise "SMS notifications disabled for this user" unless @preferences.sms_notifications
+  end
+
+  def validate_user_info
+    raise "User has no phone number" if user.phone_number.blank?
   end
 end

@@ -1,7 +1,8 @@
 class PushNotificationSender < NotificationSender
   def send_notification(notification)
-    # Send a push notification to the user
-    return false unless user.user_preference.push_notifications || !user.devices.empty?
+    # check if user has enabled push notifications
+    # and if user has devices registered
+    return false unless valid?
 
     # get device tokens from user's devices
     device_tokens = user.devices.pluck(:device_token)
@@ -30,5 +31,21 @@ class PushNotificationSender < NotificationSender
   rescue => e
     Rails.logger.error("Failed to send push notification: #{e.message}")
     false
+  end
+
+  def valid?
+    validate_channel_enabled
+    validate_user_info
+    true
+  end
+
+  private
+
+  def validate_channel_enabled
+    raise "Push notifications disabled for this user" unless @preferences.push_notifications
+  end
+
+  def validate_user_info
+    raise "User does not have devices" if user.devices.empty?
   end
 end
