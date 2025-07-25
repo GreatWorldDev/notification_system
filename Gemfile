@@ -41,7 +41,7 @@ gem "rack-attack", "~> 6.7"
 gem "sidekiq", "~> 8.0"
 
 # Notifications & Messaging
-gem "twilio-ruby", "~> 7.5"
+gem "twilio-ruby", "~> 7.7"
 gem "fcm", "~> 2.0"
 
 group :development, :test do
