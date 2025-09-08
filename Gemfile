@@ -55,7 +55,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "rspec-rails", "~> 7.1"
-  gem "factory_bot_rails", "~> 6.4"
+  gem "factory_bot_rails", "~> 6.5"
   gem "database_cleaner-active_record", "~> 2.2"
   gem "vcr", "~> 6.3"
   gem "webmock", "~> 3.25"
